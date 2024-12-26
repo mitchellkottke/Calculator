@@ -21,8 +21,8 @@ import (
 func main() {
 	var exp string = parseArgs()
 
-	ans, success := calculations.Evaluate(exp)
-	if success {
+	ans, failed := calculations.Evaluate(exp)
+	if !failed {
 		fmt.Println("Answer is:", ans)
 	}
 }

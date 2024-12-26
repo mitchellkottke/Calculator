@@ -37,14 +37,14 @@ const (
 // @param exp - Expression to evaluate, expects a valid expression with no spaces
 // @ret ans - The answer on success
 // @ret err - Whether there was an error, if there was ans is garbage
-func Evaluate(exp string) (ans float64, err bool) {
+func Evaluate(exp string) (ans float64, failed bool) {
 	answer := stack.New()
 	if !parseExp(exp, answer) {
 		fmt.Println("Failed to parse expression")
-		return 0.0, false
+		return 0.0, true
 	}
 
-	return answer.Pop().(float64), true
+	return answer.Pop().(float64), false
 }
 
 // Uses shunting yard https://en.wikipedia.org/wiki/Shunting_yard_algorithm
