@@ -1,0 +1,5 @@
+Simple Calculator written in go
+
+Usage:  ./calculator <expression>
+        expression - The expression to evaluate
+                Supported operators are: +, -, *, /, ^, ()
