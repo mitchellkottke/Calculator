@@ -47,6 +47,14 @@ func Evaluate(exp string) (ans float64, failed bool) {
 	return answer.Pop().(float64), false
 }
 
+func popStackFloat(stack *stack.Stack) (val float64, err bool) {
+	value := stack.Pop()
+	if value == nil {
+		return 0.0, true
+	}
+	return value.(float64), false
+}
+
 // Uses shunting yard https://en.wikipedia.org/wiki/Shunting_yard_algorithm
 func parseExp(exp string, operands *stack.Stack) bool {
 	num_start_ind := -1
@@ -100,8 +108,13 @@ func parseExp(exp string, operands *stack.Stack) bool {
 	for oper := operators.Peek(); oper != nil; oper = operators.Peek() {
 		operators.Pop()
 
-		num2 := operands.Pop().(float64)
-		num1 := operands.Pop().(float64)
+		num2, err2 := popStackFloat(operands)
+		num1, err1 := popStackFloat(operands)
+		if err1 || err2 {
+			fmt.Println("Tried to pop empty stack")
+			return false
+		}
+
 		if !executeOper(num1, num2, oper.(string), operands) {
 			return false
 		}
@@ -149,8 +162,13 @@ func handleOper(operands *stack.Stack, operators *stack.Stack, oper string) bool
 		//Time to execute this operator
 		operators.Pop()
 
-		num2 := operands.Pop().(float64)
-		num1 := operands.Pop().(float64)
+		num2, err2 := popStackFloat(operands)
+		num1, err1 := popStackFloat(operands)
+		if err1 || err2 {
+			fmt.Println("Tried to pop empty stack")
+			return false
+		}
+
 		if !executeOper(num1, num2, curr_oper.(string), operands) {
 			return false
 		}
@@ -171,8 +189,13 @@ func handleParen(operands *stack.Stack, operators *stack.Stack, oper string) boo
 	for curr_oper = operators.Peek(); curr_oper != nil && curr_oper.(string)[0] != '('; curr_oper = operators.Peek() {
 		operators.Pop()
 
-		num2 := operands.Pop().(float64)
-		num1 := operands.Pop().(float64)
+		num2, err2 := popStackFloat(operands)
+		num1, err1 := popStackFloat(operands)
+		if err1 || err2 {
+			fmt.Println("Tried to pop empty stack")
+			return false
+		}
+
 		if !executeOper(num1, num2, curr_oper.(string), operands) {
 			return false
 		}
