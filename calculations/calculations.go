@@ -25,6 +25,8 @@ import (
 
 // This works like an enum in C
 // Ranking of operators
+
+// IMPLEMENT MOD!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const (
 	LPAREN = iota
 	ADD_SUB

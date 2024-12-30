@@ -8,6 +8,9 @@ Usage:
 	expression - A complete math expression. Supported operators are:
 					+, -, *, /, ^, ()
 */
+
+// Gio docs: https://pkg.go.dev/gioui.org/widget#pkg-overview
+
 package main
 
 import (
@@ -19,31 +22,83 @@ import (
 
 	"gioui.org/app"
 	"gioui.org/op"
+	"gioui.org/widget"
 	"gioui.org/widget/material"
 )
 
+/*
+	Button Layout:
+	|  %  |  C  |     <     |
+	|  (  |  )  |  ^  |  /  |
+	|  7  |  8  |  9  |  *  |
+	|  4  |  5  |  6  |  -  |
+	|  1  |  2  |  3  |  +  |
+	|     0     |  .  |  =  |
+*/
+
+const ( //Button position
+	MOD = iota
+	CLEAR
+	BACK
+	LPAREN
+	RPAREN
+	EXP
+	DIV
+	SEVEN
+	EIGHT
+	NINE
+	MULT
+	FOUR
+	FIVE
+	SIX
+	SUB
+	ONE
+	TWO
+	THREE
+	ADD
+	ZERO
+	DOT
+	EQ
+)
+
+type button struct {
+	btn    widget.Clickable //Button object
+	value  int              //Button value
+	isWide bool             //If button should be drawn as a double button
+}
+
+type state struct {
+	buttons []button
+	outText string
+}
+
+var progState state
+
 func main() {
-	go func() {
-		window := new(app.Window)
-		err := run(window)
-		if err != nil {
-			log.Fatal(err)
-		}
-		os.Exit(0)
-	}()
+	go processing_thread() //Start processing thread
 
 	app.Main() //Boot up the UI window
 }
 
-func run(window *app.Window) error {
+func processing_thread() {
+	err := run()
+	if err != nil {
+		log.Fatal(err)
+	}
+	os.Exit(0)
+}
+
+func run() error {
+	window := new(app.Window)
 	theme := material.NewTheme()
 	var ops op.Ops
+
 	ans, err := calculations.Evaluate("1+1")
 	if err {
 		log.Fatal("Calculation failed")
 	}
 
-	titleStr := fmt.Sprintf("1 + 1 = %f", ans)
+	titleStr := fmt.Sprintf("1 + 1 = %g", ans)
 	for {
 		switch e := window.Event().(type) {
 		case app.DestroyEvent: //Window is closed
@@ -64,26 +119,11 @@ func run(window *app.Window) error {
 	}
 }
 
-// func main() {
-// 	var exp string = parseArgs()
+func stateInit(s *state) {
+	s.outText = ""
+	// s.buttons = {
+	// 	{}
+	// }
 
-// 	ans, failed := calculations.Evaluate(exp)
-// 	if !failed {
-// 		fmt.Println("Answer is:", ans)
-// 	}
-// }
-
-// func parseArgs() string {
-// 	if len(os.Args) != 2 || len(os.Args[1]) == 0 {
-// 		usage(os.Args[0])
-// 	}
-
-// 	return strings.Join(os.Args[1:], "")
-// }
-
-// func usage(progName string) {
-// 	fmt.Println("Usage: ", progName, "<expression>")
-// 	fmt.Println("\texpression - The expression to evaluate")
-// 	fmt.Println("\t\tSupported operators are: +, -, *, /, ^, ()")
-// 	os.Exit(1)
-// }
+	//s.buttons[0].btn.Clicked()
+}

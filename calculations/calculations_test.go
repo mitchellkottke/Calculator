@@ -10,6 +10,12 @@ type test struct {
 	shouldErr bool
 }
 
+/*
+Tests to add:
+	Negatives
+	Invalid operators
+*/
+
 var tests = [...]test{
 	//Valid
 	{"1", 1.0, false},   //Parsing

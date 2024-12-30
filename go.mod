@@ -5,6 +5,7 @@ go 1.22.5
 replace (
 	calculator/calculations => ./calculations
 	calculator/stack => ./stack
+	calculator/ui => ./ui
 )
 
 require gioui.org v0.7.1
